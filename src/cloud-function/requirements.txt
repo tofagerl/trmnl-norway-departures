@@ -1,3 +1,3 @@
 functions-framework==3.*
-requests==2.32.*
-tzdata==2025.2
+requests==2.32.4
+timedelta==2020.12.3
