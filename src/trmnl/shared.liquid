@@ -1,7 +1,13 @@
 {%- comment -%}
-  Runs before every view. Merge variables (`lines`, `station`, `window_minutes`,
-  `shown`, `last_updated`) come from the polling payload built by the cloud
-  function in src/cloud-function/trmnl.py.
+  Runs before every view. Merge variables come from the original author's polling
+  cloud function (see polling_url in settings.yml / src/cloud-function/trmnl.py).
+  Contract:
+    departures        { "<line>": { "<destination> - <platform>": [ { expected, schedule, type } ] } }
+    name              station name
+    last_updated      "HH:MM"
+    minutes_to_fetch  size of the departure window
+  Note: the payload also has a "num_departures-excludes" key, but its hyphen makes
+  it unreachable in Liquid (parsed as subtraction), so it is not used here.
 {%- endcomment -%}
-{%- assign line_count = lines | size -%}
-{%- capture subtitle -%}Next {{ window_minutes }} min · {{ shown }} dep · {{ last_updated }}{%- endcapture -%}
+{%- assign line_count = departures | size -%}
+{%- capture subtitle -%}Next {{ minutes_to_fetch }} min · {{ last_updated }}{%- endcapture -%}

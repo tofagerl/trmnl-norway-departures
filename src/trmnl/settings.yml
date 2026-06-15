@@ -1,8 +1,8 @@
 strategy: polling
 polling_verb: get
-# The cloud function in src/cloud-function/trmnl.py. Custom fields below are
-# interpolated into the query string.
-polling_url: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret={{ secret }}&stop={{ stop_id }}&exclude_platforms={{ exclude_platforms }}&minutes_to_fetch={{ minutes_to_fetch }}
+# Original author's cloud function (src/cloud-function/trmnl.py). It requires
+# secret=public; custom fields below are interpolated into the query string.
+polling_url: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret=public&stop={{ stop_id }}&exclude_platforms={{ exclude_platforms }}&minutes_to_fetch={{ minutes_to_fetch }}
 no_screen_padding: 'no'
 dark_mode: 'no'
 custom_fields:
@@ -23,8 +23,3 @@ custom_fields:
     description: How far ahead to show departures
     placeholder: '30'
     default: '30'
-  - keyname: secret
-    field_type: string
-    name: API secret
-    description: Shared secret if the cloud function sets API_SECRET (leave blank if open)
-    placeholder: 'public'
