@@ -1,0 +1,38 @@
+<div class="layout">
+  <div class="columns">
+    <div class="column" data-overflow-max-cols="1" data-overflow-counter="true">
+      {% if line_count > 0 %}
+        {% for route in lines %}
+          <div class="item">
+            <div class="meta">
+              <span class="index">{{ route.line }}</span>
+            </div>
+            <div class="content">
+              {% for dest in route.destinations %}
+                <span class="title title--small" data-clamp="1">{{ dest.destination }}{% if dest.platform != "" %} ({{ dest.platform }}){% endif %}</span>
+                <div class="flex flex--row flex--wrap gap--small">
+                  {% for time in dest.times limit: 4 %}
+                    <span class="label label--small label--underline">{{ time }}</span>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content">
+            <span class="label">No departures in the next {{ window_minutes }} minutes</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg">
+  <span class="title" data-clamp="1">{{ station | default: "Departures" }}</span>
+  <span class="instance">{{ subtitle }}</span>
+</div>

@@ -1,0 +1,30 @@
+strategy: polling
+polling_verb: get
+# The cloud function in src/cloud-function/trmnl.py. Custom fields below are
+# interpolated into the query string.
+polling_url: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret={{ secret }}&stop={{ stop_id }}&exclude_platforms={{ exclude_platforms }}&minutes_to_fetch={{ minutes_to_fetch }}
+no_screen_padding: 'no'
+dark_mode: 'no'
+custom_fields:
+  - keyname: stop_id
+    field_type: string
+    name: Stop ID
+    description: Entur stop place id (find yours at https://stoppestedsregister.entur.org)
+    placeholder: 'NSR:StopPlace:58366'
+    default: 'NSR:StopPlace:58366'
+  - keyname: exclude_platforms
+    field_type: string
+    name: Exclude platforms
+    description: Comma-separated platform/quay codes to hide (optional)
+    placeholder: 'A,B'
+  - keyname: minutes_to_fetch
+    field_type: string
+    name: Time window (minutes)
+    description: How far ahead to show departures
+    placeholder: '30'
+    default: '30'
+  - keyname: secret
+    field_type: string
+    name: API secret
+    description: Shared secret if the cloud function sets API_SECRET (leave blank if open)
+    placeholder: 'public'
