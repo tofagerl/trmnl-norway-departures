@@ -1,0 +1,7 @@
+{%- comment -%}
+  Runs before every view. Merge variables (`lines`, `station`, `window_minutes`,
+  `shown`, `last_updated`) come from the polling payload built by the cloud
+  function in src/cloud-function/trmnl.py.
+{%- endcomment -%}
+{%- assign line_count = lines | size -%}
+{%- capture subtitle -%}Next {{ window_minutes }} min · {{ shown }} dep · {{ last_updated }}{%- endcapture -%}
