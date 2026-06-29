@@ -26,6 +26,9 @@ SAMPLE = {
             "Ringen via Tøyen - 2": [{"expected": "15:04.06"}, {"expected": "15:18.00"}],
             "Sognsvann via Tøyen - 2": [{"expected": "15:00.00"}, {"expected": "15:15.05"}],
         },
+        "L2": {
+            "Oslo S - 3": [{"expected": "14:53.00"}, {"expected": "15:08.00"}],
+        },
         "17": {
             "Sinsen-Grefsen st. - D": [
                 {"expected": "14:55.57"},
@@ -50,8 +53,29 @@ def esc(value):
     return html.escape(str(value))
 
 
+def oslo_banner(departures):
+    """Soonest departure to Oslo S across all lines — mirrors shared.liquid."""
+    best = None
+    for line, destinations in departures.items():
+        for dest_key, times in destinations.items():
+            if "Oslo S" not in dest_key.split(" - ")[0]:
+                continue
+            t = times[0]["expected"].split(".")[0]
+            if best is None or t < best[0]:
+                best = (t, line, dest_key.split(" - ")[0])
+    if best is None:
+        return ""
+    time, line, dest = best
+    return (
+        f'<div class="item"><div class="meta"><span class="index">{esc(line)}</span></div>'
+        f'<div class="content"><span class="label label--small">{esc(dest)}</span>'
+        f'<span class="value value--large value--tnums">{esc(time)}</span></div></div>'
+    )
+
+
 def column(departures, max_cols, time_limit=None, dest_limit=None):
     out = [f'<div class="column" data-overflow-max-cols="{max_cols}" data-overflow-counter="true">']
+    out.append(oslo_banner(departures))
     for line, destinations in departures.items():
         out.append(f'<div class="item"><div class="meta"><span class="index">{esc(line)}</span></div><div class="content">')
         for i, (dest_key, times) in enumerate(destinations.items()):

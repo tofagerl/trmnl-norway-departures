@@ -11,3 +11,38 @@
 {%- endcomment -%}
 {%- assign line_count = departures | size -%}
 {%- capture subtitle -%}Next {{ minutes_to_fetch }} min · {{ last_updated }}{%- endcapture -%}
+
+{%- comment -%}
+  Find the soonest departure to Oslo S across all lines. Each destination's
+  times are pre-sorted, so [0] is its earliest; we take the min of those.
+  Times are "HH:MM" 24h, where string compare == chronological.
+  ponytail: breaks across a midnight wrap (00:05 < 23:55); negligible for a
+  departure board, revisit only if midnight departures matter.
+{%- endcomment -%}
+{%- assign oslo_time = "" -%}
+{%- assign oslo_best = "99:99" -%}
+{%- for departure in departures -%}
+  {%- for dest in departure[1] -%}
+    {%- assign dest_name = dest[0] | split: " - " | first -%}
+    {%- if dest_name contains "Oslo S" -%}
+      {%- assign t = dest[1][0].expected | split: "." | first -%}
+      {%- if t < oslo_best -%}
+        {%- assign oslo_best = t -%}
+        {%- assign oslo_time = t -%}
+        {%- assign oslo_line = departure[0] -%}
+        {%- assign oslo_dest = dest_name -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- capture oslo_banner -%}
+{%- if oslo_time != "" -%}
+<div class="item">
+  <div class="meta"><span class="index">{{ oslo_line }}</span></div>
+  <div class="content">
+    <span class="label label--small">{{ oslo_dest }}</span>
+    <span class="value value--large value--tnums">{{ oslo_time }}</span>
+  </div>
+</div>
+{%- endif -%}
+{%- endcapture -%}
