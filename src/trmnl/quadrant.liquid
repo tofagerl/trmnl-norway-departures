@@ -8,11 +8,11 @@
               <span class="index">{{ departure[0] }}</span>
             </div>
             <div class="content">
-              {% for dest in departure[1] limit: 1 %}
+              {% for dest in departure[1] %}
                 {% assign parts = dest[0] | split: " - " %}
                 <span class="title title--small" data-clamp="1">{{ parts[0] }}</span>
-                <div class="flex flex--row gap--small">
-                  {% for time in dest[1] limit: 2 %}
+                <div class="flex flex--row flex--wrap gap--small">
+                  {% for time in dest[1] %}
                     {% assign hhmm = time.expected | split: "." %}
                     <span class="label label--small label--underline">{{ hhmm[0] }}</span>
                   {% endfor %}
